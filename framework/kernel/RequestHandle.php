@@ -22,7 +22,7 @@ class RequestHandle
     /**
      * @describe 搜索路由
      * @param \Swoole\Http\Request $request 请求类对象
-     * @return array
+     * @return mixed
      */
     private static function searchRoute(\Swoole\Http\Request $request)
     {
@@ -32,7 +32,7 @@ class RequestHandle
         try {
             $route = RegisteredRoute::getGather($method, $uri);
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            return false;
         }
 
         return $route;
