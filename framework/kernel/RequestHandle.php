@@ -16,7 +16,7 @@ class RequestHandle
      */
     public static function handle(\Swoole\Http\Request $request)
     {
-        return self::searchRoute($request);
+        return self::trigger(self::searchRoute($request));
     }
 
     /**
@@ -32,9 +32,43 @@ class RequestHandle
         try {
             $route = RegisteredRoute::getGather($method, $uri);
         } catch (\Exception $e) {
-            return false;
+            return null;
         }
 
         return $route;
+    }
+
+    /**
+     * @describe 触发调度
+     * @param mixed $route 解析后的路由信息
+     * @return mixed
+     */
+    private static function trigger($route)
+    {
+        $return = [];
+
+        // 路由错误或调度错误处理
+        if (empty($route)) {
+            $return = [
+                'code' => 404,
+                'data' => null,
+            ];
+        } else {
+            try {
+                $controller = new $route['class']();
+                $method = $route['method'];
+                $result = $controller->$method();
+            } catch (\Exception $e) {
+                $result = null;
+            } finally {
+                $code = $result ? 200 : 500 ;
+                $return = [
+                    'code' => $code,
+                    'data' => $result,
+                ];
+            }
+        }
+
+        return json_encode($return);
     }
 }

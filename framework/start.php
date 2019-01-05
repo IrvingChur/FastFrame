@@ -97,17 +97,10 @@ final class FrameworkStart {
     public function onRequest($request, $response)
     {
         $requestHandle = \Framework\Kernel\RequestHandle::handle($request);
-        if ($requestHandle === false) {
-            $result = 'No route found';
-        } else {
-            $controller = new $requestHandle['class']();
-            $method = $requestHandle['method'];
-            $result = $controller->$method();
-        }
 
         // 测试用例 返回string
         $response->header('content-type', 'text/html;charset=utf-8', true);
-        $response->end($result);
+        $response->end($requestHandle);
     }
 
     /**
