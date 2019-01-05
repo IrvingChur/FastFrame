@@ -17,6 +17,7 @@ class LoginController
      */
     public function index()
     {
+        \Framework\Kernel\LogSystem::write('测试用例');
         return 'string';
     }
 }
