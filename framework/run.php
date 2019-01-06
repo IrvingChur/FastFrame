@@ -23,6 +23,11 @@ final class Framework {
         // 注解初始化
         \Framework\Kernel\Annotation::init();
 
+        // Composer加载
+        require ROOT_PATH.'/vendor/autoload.php';
+
+        // 初始化Dotenv
+        \Dotenv\Dotenv::create(ROOT_PATH);
     }
 
     /**
